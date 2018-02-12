@@ -20,7 +20,7 @@ import Foundation
  Associated layout class for `MutatorProcedureIfReturn`.
  */
 @objc(BKYMutatorProcedureIfReturnLayout)
-@objcMembers public class MutatorProcedureIfReturnLayout : MutatorLayout {
+@objcMembers public class MutatorProcedureIfReturnLayout : MutatorLayout, EventManagerListener {
 
   // MARK: - Properties
 
@@ -144,9 +144,7 @@ import Foundation
       }
     }
   }
-}
 
-extension MutatorProcedureIfReturnLayout: EventManagerListener {
   public func eventManager(_ eventManager: EventManager, didFireEvent event: BlocklyEvent) {
     if layoutCoordinator?.workspaceLayout.workspace.uuid == event.workspaceID &&
       event is BlocklyEvent.Move {
