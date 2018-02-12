@@ -49,7 +49,7 @@ public protocol ViewBuilderDelegate {
  Class for maintaining the `View` hierarchy from a `Layout` hierarchy.
  */
 @objcMembers @objc(BKYViewBuilder)
-open class ViewBuilder: NSObject {
+open class ViewBuilder: NSObject, LayoutHierarchyListener {
   // MARK: - Properties
 
   /// Factory responsible for creating new `View` instances
@@ -166,9 +166,7 @@ open class ViewBuilder: NSObject {
       viewFactory.recycleViewTree(childView)
     }
   }
-}
 
-extension ViewBuilder: LayoutHierarchyListener {
   public func layout(_ layout: Layout,
     didAdoptChildLayout childLayout: Layout, fromOldParentLayout oldParentLayout: Layout?)
   {
