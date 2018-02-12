@@ -21,7 +21,7 @@ import Foundation
  View for rendering a `MutatorIfElse`.
  */
 @objc(BKYMutatorIfElseView)
-@objcMembers open class MutatorIfElseView: LayoutView {
+@objcMembers open class MutatorIfElseView: LayoutView, UIPopoverPresentationControllerDelegate {
   // MARK: - Properties
 
   /// Convenience property accessing `self.layout` as `MutatorIfElseLayout`
@@ -113,11 +113,9 @@ import Foundation
                                 fromView: popoverButton,
                                 presentationDelegate: self)
   }
-}
 
 // MARK: - UIPopoverPresentationControllerDelegate
 
-extension MutatorIfElseView: UIPopoverPresentationControllerDelegate {
   public func prepareForPopoverPresentation(
     _ popoverPresentationController: UIPopoverPresentationController) {
     guard let rtl = self.mutatorIfElseLayout?.engine.rtl else { return }
