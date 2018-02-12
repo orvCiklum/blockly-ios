@@ -21,7 +21,7 @@ import Foundation
  remains in-sync.
  */
 @objc(BKYWorkspaceLayoutCoordinator)
-@objcMembers open class WorkspaceLayoutCoordinator: NSObject {
+@objcMembers open class WorkspaceLayoutCoordinator: NSObject, WorkspaceListener, NameManagerListener {
   // MARK: - Properties
 
   /// The workspace layout whose layout hierarchy is being managed by this object
@@ -740,11 +740,9 @@ import Foundation
       }
     }
   }
-}
 
 // MARK: - WorkspaceListener implementation
 
-extension WorkspaceLayoutCoordinator: WorkspaceListener {
   public func workspace(_ workspace: Workspace, didAddBlockTrees blockTrees: [Block]) {
     for block in blockTrees {
       do {
@@ -798,11 +796,9 @@ extension WorkspaceLayoutCoordinator: WorkspaceListener {
       }
     }
   }
-}
 
 // MARK: - NameManagerListener Implementation
 
-extension WorkspaceLayoutCoordinator: NameManagerListener {
   public func nameManager(_ nameManager: NameManager, didRemoveName name: String) {
     let blocks = workspaceLayout.workspace.allVariableBlocks(forName: name)
     // Don't do anything to toolbox/trash workspaces.
