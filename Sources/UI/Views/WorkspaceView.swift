@@ -21,7 +21,7 @@ import Foundation
 View for rendering a `WorkspaceLayout`.
 */
 @objc(BKYWorkspaceView)
-@objcMembers open class WorkspaceView: LayoutView {
+@objcMembers open class WorkspaceView: LayoutView, BlockGroupViewDelegate, UIScrollViewDelegate {
 
   // MARK: - Constants
 
@@ -746,11 +746,10 @@ View for rendering a `WorkspaceLayout`.
       ((minY <= topMostEdge && topMostEdge <= maxY) ||
       (minY <= bottomMostEdge && bottomMostEdge <= maxY))
   }
-}
 
 // MARK: - Block Group View Management
 
-extension WorkspaceView: BlockGroupViewDelegate {
+
   /**
    Adds a `BlockGroupView` to the workspace's scrollview.
 
@@ -790,11 +789,9 @@ extension WorkspaceView: BlockGroupViewDelegate {
   open func blockGroupViewDidUpdateDragging(_ blockGroupView: BlockGroupView) {
     upsertBlockGroupView(blockGroupView)
   }
-}
 
 // MARK: - UIScrollViewDelegate Implementation
 
-extension WorkspaceView: UIScrollViewDelegate {
   public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
     removeExcessScrollSpace()
   }
