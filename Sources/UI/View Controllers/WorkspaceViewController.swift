@@ -72,7 +72,10 @@ public protocol WorkspaceViewControllerDelegate {
  View controller for managing a workspace.
  */
 @objc(BKYWorkspaceViewController)
-@objcMembers open class WorkspaceViewController: UIViewController {
+@objcMembers open class WorkspaceViewController: UIViewController,
+    ViewBuilderDelegate,
+    LayoutPopoverDelegate,
+    UIPopoverPresentationControllerDelegate {
 
   /// The workspace layout coordinator this view controller operates on
   open fileprivate(set) var workspaceLayoutCoordinator: WorkspaceLayoutCoordinator?
@@ -163,11 +166,9 @@ public protocol WorkspaceViewControllerDelegate {
     try _viewBuilder.buildViewTree(forWorkspaceView: workspaceView)
     workspaceView.refreshView()
   }
-}
 
 // MARK: - ViewBuilderDelegate implementation
 
-extension WorkspaceViewController: ViewBuilderDelegate {
   public func viewBuilder(
     _ viewBuilder: ViewBuilder, didAddChild childView: UIView, toParent parentView: UIView)
   {
@@ -205,11 +206,9 @@ extension WorkspaceViewController: ViewBuilderDelegate {
       }
     }
   }
-}
 
 // MARK: - LayoutPopoverDelegate implementation
 
-extension WorkspaceViewController: LayoutPopoverDelegate {
   public func layoutView(
     _ layoutView: LayoutView,
     requestedToPresentPopoverViewController viewController: UIViewController,
@@ -266,11 +265,9 @@ extension WorkspaceViewController: LayoutPopoverDelegate {
     // `self.popoverPresentationControllerDidDismissPopover(:)`.
     delegate?.workspaceViewControllerDismissedViewController(self)
   }
-}
 
 // MARK: - UIPopoverPresentationControllerDelegate Implementation
 
-extension WorkspaceViewController: UIPopoverPresentationControllerDelegate {
   @available(iOS 8.3, *)
   public func adaptivePresentationStyle(for controller: UIPresentationController,
     traitCollection: UITraitCollection) -> UIModalPresentationStyle
