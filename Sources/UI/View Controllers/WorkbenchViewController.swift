@@ -55,7 +55,12 @@ public protocol WorkbenchViewControllerDelegate: class {
  View controller for editing a workspace.
  */
 @objc(BKYWorkbenchViewController)
-@objcMembers open class WorkbenchViewController: UIViewController {
+@objcMembers open class WorkbenchViewController: UIViewController,
+    WorkspaceViewControllerDelegate,
+    ToolboxCategoryListViewControllerDelegate,
+    BlocklyPanGestureRecognizerDelegate,
+    UIGestureRecognizerDelegate,
+    EventManagerListener {
 
   // MARK: - Constants
 
@@ -900,6 +905,255 @@ public protocol WorkbenchViewControllerDelegate: class {
         "'\(Array(Set(names)).sorted().joined(separator: "', '"))'")
     }
   }
+
+// MARK: - WorkspaceViewControllerDelegate
+
+    open func workspaceViewController(
+        _ workspaceViewController: WorkspaceViewController,
+        didAddBlockView blockView: BlockView) {
+        if workspaceViewController == self.workspaceViewController {
+            addGestureTracking(forBlockView: blockView)
+            updateWorkspaceCapacity()
+        }
+    }
+    
+    open func workspaceViewController(
+        _ workspaceViewController: WorkspaceViewController,
+        didRemoveBlockView blockView: BlockView) {
+        if workspaceViewController == self.workspaceViewController {
+            removeGestureTracking(forBlockView: blockView)
+            updateWorkspaceCapacity()
+        }
+    }
+    
+    open func workspaceViewController(
+        _ workspaceViewController: WorkspaceViewController,
+        willPresentViewController viewController: UIViewController) {
+        addUIStateValue(statePresentingPopover)
+    }
+    
+    open func workspaceViewControllerDismissedViewController(
+        _ workspaceViewController: WorkspaceViewController) {
+        removeUIStateValue(statePresentingPopover)
+    }
+
+
+// MARK: - ToolboxCategoryListViewControllerDelegate implementation
+
+    public func toolboxCategoryListViewController(
+        _ controller: ToolboxCategoryListViewController, didSelectCategory category: Toolbox.Category)
+    {
+        addUIStateValue(stateCategoryOpen, animated: true)
+    }
+    
+    public func toolboxCategoryListViewControllerDidDeselectCategory(
+        _ controller: ToolboxCategoryListViewController)
+    {
+        removeUIStateValue(stateCategoryOpen, animated: true)
+    }
+
+// MARK: - BlocklyPanGestureRecognizerDelegate
+
+    /**
+     Pan gesture event handler for a block view inside `self.workspaceView`.
+     */
+    open func blocklyPanGestureRecognizer(
+        _ gesture: BlocklyPanGestureRecognizer, didTouchBlock block: BlockView,
+        touch: UITouch, touchState: BlocklyPanGestureRecognizer.TouchState)
+    {
+        guard let blockLayout = block.blockLayout?.draggableBlockLayout else {
+            return
+        }
+        
+        var blockView = block
+        let touchPosition = touch.location(in: workspaceView.scrollView)
+        let workspacePosition = workspaceView.workspacePosition(fromViewPoint: touchPosition)
+        
+        // TODO(#44): Handle screen rotations (either lock the screen during drags or stop any
+        // on-going drags when the screen is rotated).
+        
+        if touchState == .began {
+            if EventManager.shared.currentGroupID == nil {
+                EventManager.shared.pushNewGroup()
+            }
+            
+            let inToolbox = blockView.bky_isDescendant(of: toolboxCategoryViewController.view)
+            let inTrash = blockView.bky_isDescendant(of: trashCanViewController.view)
+            // If the touch is in the toolbox, copy the block over to the workspace first.
+            if inToolbox {
+                guard let newBlock = copyBlockToWorkspace(blockView) else {
+                    return
+                }
+                gesture.replaceBlock(block, with: newBlock)
+                blockView = newBlock
+                
+                if !toolboxDrawerStaysOpen {
+                    removeUIStateValue(stateCategoryOpen, animated: false)
+                }
+            } else if inTrash {
+                let oldBlock = blockView
+                
+                guard let newBlock = copyBlockToWorkspace(blockView) else {
+                    return
+                }
+                gesture.replaceBlock(block, with: newBlock)
+                blockView = newBlock
+                removeBlockFromTrash(oldBlock)
+                
+                removeUIStateValue(stateTrashCanOpen, animated: false)
+            }
+            
+            guard let blockLayout = blockView.blockLayout?.draggableBlockLayout else {
+                return
+            }
+            
+            addUIStateValue(stateDraggingBlock)
+            do {
+                try _dragger.startDraggingBlockLayout(blockLayout, touchPosition: workspacePosition)
+            } catch let error {
+                bky_assertionFailure("Could not start dragging block layout: \(error)")
+                
+                // This shouldn't happen in practice. Cancel the gesture to be safe.
+                gesture.cancelAllTouches()
+            }
+        } else if touchState == .changed || touchState == .ended {
+            addUIStateValue(stateDraggingBlock)
+            _dragger.continueDraggingBlockLayout(blockLayout, touchPosition: workspacePosition)
+            
+            if isGestureTouchingTrashCan(gesture) && blockLayout.block.deletable {
+                addUIStateValue(stateTrashCanHighlighted)
+            } else {
+                removeUIStateValue(stateTrashCanHighlighted)
+            }
+        }
+        
+        if (touchState == .ended || touchState == .cancelled) && _dragger.numberOfActiveDrags > 0 {
+            let touchTouchingTrashCan = isTouchTouchingTrashCan(touchPosition,
+                                                                fromView: workspaceView.scrollView)
+            if touchState == .ended && touchTouchingTrashCan && blockLayout.block.deletable {
+                // This block is being "deleted" -- cancel the drag and copy the block into the trash can
+                _dragger.cancelDraggingBlockLayout(blockLayout)
+                
+                do {
+                    // Keep a reference of all blocks that are getting transferred over so they don't go
+                    // out of memory.
+                    var allBlocksToRemove = blockLayout.block.allBlocksForTree()
+                    
+                    try _workspaceLayoutCoordinator?.removeBlockTree(blockLayout.block)
+                    
+                    // Enable the entire block tree, before adding it to the trash can.
+                    for block in blockLayout.block.allBlocksForTree() {
+                        block.disabled = false
+                    }
+                    
+                    addBlockToTrash(blockLayout.block)
+                    
+                    allBlocksToRemove.removeAll()
+                } catch let error {
+                    bky_assertionFailure("Could not copy block to trash can: \(error)")
+                }
+            } else {
+                _dragger.finishDraggingBlockLayout(blockLayout)
+            }
+            
+            if _dragger.numberOfActiveDrags == 0 {
+                // Update the UI state
+                removeUIStateValue(stateDraggingBlock)
+                if !isGestureTouchingTrashCan(gesture) {
+                    removeUIStateValue(stateTrashCanHighlighted)
+                }
+                
+                EventManager.shared.popGroup()
+            }
+            
+            // Always fire pending events after a finger has been lifted. All grouped events will
+            // eventually get grouped together regardless if they were fired in batches.
+            EventManager.shared.firePendingEvents()
+        }
+    }
+
+// MARK: - UIGestureRecognizerDelegate
+
+    open func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        
+        if workspaceViewController.workspaceView.scrollView.isInMotion ||
+            toolboxCategoryViewController.workspaceScrollView.isInMotion ||
+            trashCanViewController.workspaceView.scrollView.isInMotion {
+            return false
+        }
+        
+        if let panGestureRecognizer = gestureRecognizer as? BlocklyPanGestureRecognizer,
+            let firstTouch = panGestureRecognizer.firstTouch,
+            let toolboxView = toolboxCategoryViewController.view,
+            toolboxView.bounds.contains(firstTouch.previousLocation(in: toolboxView))
+        {
+            // For toolbox blocks, only fire the pan gesture if the user is panning in the direction
+            // perpendicular to the toolbox scrolling. Otherwise, don't let it fire, so the user can
+            // simply continue scrolling the toolbox.
+            let delta = panGestureRecognizer.firstTouchDelta(inView: toolboxView)
+            
+            // Figure out angle of delta vector, relative to the scroll direction
+            let radians: CGFloat
+            if style.toolboxOrientation == .vertical {
+                radians = atan(abs(delta.x) / abs(delta.y))
+            } else {
+                radians = atan(abs(delta.y) / abs(delta.x))
+            }
+            
+            // Fire the gesture if it started more than 20 degrees in the perpendicular direction
+            let angle = (radians / CGFloat.pi) * 180
+            if angle > 20 {
+                return true
+            } else {
+                panGestureRecognizer.cancelAllTouches()
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool
+    {
+        let scrollView = workspaceViewController.workspaceView.scrollView
+        let toolboxScrollView = toolboxCategoryViewController.workspaceScrollView
+        
+        // Force the scrollView pan and zoom gestures to fail unless this one fails
+        if otherGestureRecognizer == scrollView.panGestureRecognizer ||
+            otherGestureRecognizer == toolboxScrollView.panGestureRecognizer ||
+            otherGestureRecognizer == scrollView.pinchGestureRecognizer {
+            return true
+        }
+        
+        return false
+    }
+
+// MARK: - EventManagerListener Implementation
+
+    open func eventManager(_ eventManager: EventManager, didFireEvent event: BlocklyEvent) {
+        guard shouldRecordEvents && allowUndoRedo else {
+            return
+        }
+        
+        if event.workspaceID == workspace?.uuid {
+            // Try to merge this event with the last one in the undo stack
+            if let lastEvent = undoStack.last,
+                let mergedEvent = lastEvent.merged(withNextChronologicalEvent: event) {
+                undoStack.removeLast()
+                
+                if !mergedEvent.isDiscardable() {
+                    undoStack.append(mergedEvent)
+                }
+            } else {
+                // Couldn't merge event with last one, just append it
+                undoStack.append(event)
+            }
+            
+            // Clear the redo stack now since a new event has been added to the undo stack
+            redoStack.removeAll()
+        }
+    }
 }
 
 // MARK: - State Handling
@@ -1082,34 +1336,6 @@ extension WorkbenchViewController {
     }
 
     return false
-  }
-}
-
-// MARK: - EventManagerListener Implementation
-
-extension WorkbenchViewController: EventManagerListener {
-  open func eventManager(_ eventManager: EventManager, didFireEvent event: BlocklyEvent) {
-    guard shouldRecordEvents && allowUndoRedo else {
-      return
-    }
-
-    if event.workspaceID == workspace?.uuid {
-      // Try to merge this event with the last one in the undo stack
-      if let lastEvent = undoStack.last,
-        let mergedEvent = lastEvent.merged(withNextChronologicalEvent: event) {
-        undoStack.removeLast()
-
-        if !mergedEvent.isDiscardable() {
-          undoStack.append(mergedEvent)
-        }
-      } else {
-        // Couldn't merge event with last one, just append it
-        undoStack.append(event)
-      }
-
-      // Clear the redo stack now since a new event has been added to the undo stack
-      redoStack.removeAll()
-    }
   }
 }
 
@@ -1430,39 +1656,6 @@ extension WorkbenchViewController {
   }
 }
 
-// MARK: - WorkspaceViewControllerDelegate
-
-extension WorkbenchViewController: WorkspaceViewControllerDelegate {
-  open func workspaceViewController(
-    _ workspaceViewController: WorkspaceViewController,
-    didAddBlockView blockView: BlockView) {
-    if workspaceViewController == self.workspaceViewController {
-      addGestureTracking(forBlockView: blockView)
-      updateWorkspaceCapacity()
-    }
-  }
-
-  open func workspaceViewController(
-    _ workspaceViewController: WorkspaceViewController,
-    didRemoveBlockView blockView: BlockView) {
-    if workspaceViewController == self.workspaceViewController {
-      removeGestureTracking(forBlockView: blockView)
-      updateWorkspaceCapacity()
-    }
-  }
-
-  open func workspaceViewController(
-    _ workspaceViewController: WorkspaceViewController,
-    willPresentViewController viewController: UIViewController) {
-    addUIStateValue(statePresentingPopover)
-  }
-
-  open func workspaceViewControllerDismissedViewController(
-    _ workspaceViewController: WorkspaceViewController) {
-    removeUIStateValue(statePresentingPopover)
-  }
-}
-
 // MARK: - Block Copying
 
 extension WorkbenchViewController {
@@ -1595,21 +1788,6 @@ extension WorkbenchViewController {
   }
 }
 
-// MARK: - ToolboxCategoryListViewControllerDelegate implementation
-
-extension WorkbenchViewController: ToolboxCategoryListViewControllerDelegate {
-  public func toolboxCategoryListViewController(
-    _ controller: ToolboxCategoryListViewController, didSelectCategory category: Toolbox.Category)
-  {
-    addUIStateValue(stateCategoryOpen, animated: true)
-  }
-
-  public func toolboxCategoryListViewControllerDidDeselectCategory(
-    _ controller: ToolboxCategoryListViewController)
-  {
-    removeUIStateValue(stateCategoryOpen, animated: true)
-  }
-}
 
 // MARK: - Block Highlighting
 
@@ -1724,186 +1902,6 @@ extension WorkbenchViewController {
   }
 }
 
-// MARK: - BlocklyPanGestureRecognizerDelegate
-
-extension WorkbenchViewController: BlocklyPanGestureRecognizerDelegate {
-  /**
-   Pan gesture event handler for a block view inside `self.workspaceView`.
-   */
-  open func blocklyPanGestureRecognizer(
-    _ gesture: BlocklyPanGestureRecognizer, didTouchBlock block: BlockView,
-    touch: UITouch, touchState: BlocklyPanGestureRecognizer.TouchState)
-  {
-    guard let blockLayout = block.blockLayout?.draggableBlockLayout else {
-      return
-    }
-
-    var blockView = block
-    let touchPosition = touch.location(in: workspaceView.scrollView)
-    let workspacePosition = workspaceView.workspacePosition(fromViewPoint: touchPosition)
-
-    // TODO(#44): Handle screen rotations (either lock the screen during drags or stop any
-    // on-going drags when the screen is rotated).
-
-    if touchState == .began {
-      if EventManager.shared.currentGroupID == nil {
-        EventManager.shared.pushNewGroup()
-      }
-
-      let inToolbox = blockView.bky_isDescendant(of: toolboxCategoryViewController.view)
-      let inTrash = blockView.bky_isDescendant(of: trashCanViewController.view)
-      // If the touch is in the toolbox, copy the block over to the workspace first.
-      if inToolbox {
-        guard let newBlock = copyBlockToWorkspace(blockView) else {
-          return
-        }
-        gesture.replaceBlock(block, with: newBlock)
-        blockView = newBlock
-
-        if !toolboxDrawerStaysOpen {
-          removeUIStateValue(stateCategoryOpen, animated: false)
-        }
-      } else if inTrash {
-        let oldBlock = blockView
-
-        guard let newBlock = copyBlockToWorkspace(blockView) else {
-          return
-        }
-        gesture.replaceBlock(block, with: newBlock)
-        blockView = newBlock
-        removeBlockFromTrash(oldBlock)
-
-        removeUIStateValue(stateTrashCanOpen, animated: false)
-      }
-
-      guard let blockLayout = blockView.blockLayout?.draggableBlockLayout else {
-        return
-      }
-
-      addUIStateValue(stateDraggingBlock)
-      do {
-        try _dragger.startDraggingBlockLayout(blockLayout, touchPosition: workspacePosition)
-      } catch let error {
-        bky_assertionFailure("Could not start dragging block layout: \(error)")
-
-        // This shouldn't happen in practice. Cancel the gesture to be safe.
-        gesture.cancelAllTouches()
-      }
-    } else if touchState == .changed || touchState == .ended {
-      addUIStateValue(stateDraggingBlock)
-      _dragger.continueDraggingBlockLayout(blockLayout, touchPosition: workspacePosition)
-
-      if isGestureTouchingTrashCan(gesture) && blockLayout.block.deletable {
-        addUIStateValue(stateTrashCanHighlighted)
-      } else {
-        removeUIStateValue(stateTrashCanHighlighted)
-      }
-    }
-
-    if (touchState == .ended || touchState == .cancelled) && _dragger.numberOfActiveDrags > 0 {
-      let touchTouchingTrashCan = isTouchTouchingTrashCan(touchPosition,
-        fromView: workspaceView.scrollView)
-      if touchState == .ended && touchTouchingTrashCan && blockLayout.block.deletable {
-        // This block is being "deleted" -- cancel the drag and copy the block into the trash can
-        _dragger.cancelDraggingBlockLayout(blockLayout)
-
-        do {
-          // Keep a reference of all blocks that are getting transferred over so they don't go
-          // out of memory.
-          var allBlocksToRemove = blockLayout.block.allBlocksForTree()
-
-          try _workspaceLayoutCoordinator?.removeBlockTree(blockLayout.block)
-
-          // Enable the entire block tree, before adding it to the trash can.
-          for block in blockLayout.block.allBlocksForTree() {
-            block.disabled = false
-          }
-
-          addBlockToTrash(blockLayout.block)
-
-          allBlocksToRemove.removeAll()
-        } catch let error {
-          bky_assertionFailure("Could not copy block to trash can: \(error)")
-        }
-      } else {
-        _dragger.finishDraggingBlockLayout(blockLayout)
-      }
-
-      if _dragger.numberOfActiveDrags == 0 {
-        // Update the UI state
-        removeUIStateValue(stateDraggingBlock)
-        if !isGestureTouchingTrashCan(gesture) {
-          removeUIStateValue(stateTrashCanHighlighted)
-        }
-
-        EventManager.shared.popGroup()
-      }
-
-      // Always fire pending events after a finger has been lifted. All grouped events will
-      // eventually get grouped together regardless if they were fired in batches.
-      EventManager.shared.firePendingEvents()
-    }
-  }
-}
-
-// MARK: - UIGestureRecognizerDelegate
-
-extension WorkbenchViewController: UIGestureRecognizerDelegate {
-  open func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-
-    if workspaceViewController.workspaceView.scrollView.isInMotion ||
-      toolboxCategoryViewController.workspaceScrollView.isInMotion ||
-      trashCanViewController.workspaceView.scrollView.isInMotion {
-      return false
-    }
-
-    if let panGestureRecognizer = gestureRecognizer as? BlocklyPanGestureRecognizer,
-      let firstTouch = panGestureRecognizer.firstTouch,
-      let toolboxView = toolboxCategoryViewController.view,
-      toolboxView.bounds.contains(firstTouch.previousLocation(in: toolboxView))
-    {
-      // For toolbox blocks, only fire the pan gesture if the user is panning in the direction
-      // perpendicular to the toolbox scrolling. Otherwise, don't let it fire, so the user can
-      // simply continue scrolling the toolbox.
-      let delta = panGestureRecognizer.firstTouchDelta(inView: toolboxView)
-
-      // Figure out angle of delta vector, relative to the scroll direction
-      let radians: CGFloat
-      if style.toolboxOrientation == .vertical {
-        radians = atan(abs(delta.x) / abs(delta.y))
-      } else {
-        radians = atan(abs(delta.y) / abs(delta.x))
-      }
-
-      // Fire the gesture if it started more than 20 degrees in the perpendicular direction
-      let angle = (radians / CGFloat.pi) * 180
-      if angle > 20 {
-        return true
-      } else {
-        panGestureRecognizer.cancelAllTouches()
-        return false
-      }
-    }
-
-    return true
-  }
-
-  open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-    shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool
-  {
-    let scrollView = workspaceViewController.workspaceView.scrollView
-    let toolboxScrollView = toolboxCategoryViewController.workspaceScrollView
-
-    // Force the scrollView pan and zoom gestures to fail unless this one fails
-    if otherGestureRecognizer == scrollView.panGestureRecognizer ||
-      otherGestureRecognizer == toolboxScrollView.panGestureRecognizer ||
-      otherGestureRecognizer == scrollView.pinchGestureRecognizer {
-      return true
-    }
-
-    return false
-  }
-}
 
 // MARK: - Interactive Pop Gesture Recognizer
 
