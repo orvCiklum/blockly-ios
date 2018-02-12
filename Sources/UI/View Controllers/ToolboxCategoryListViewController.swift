@@ -41,7 +41,8 @@ public protocol ToolboxCategoryListViewControllerDelegate: class {
  A view for displaying a vertical list of categories from a `Toolbox`.
  */
 @objc(BKYToolboxCategoryListViewController)
-@objcMembers public final class ToolboxCategoryListViewController: UICollectionViewController {
+@objcMembers public final class ToolboxCategoryListViewController: UICollectionViewController,
+    UICollectionViewDelegateFlowLayout {
 
   // MARK: - Constants
 
@@ -284,9 +285,7 @@ public protocol ToolboxCategoryListViewControllerDelegate: class {
       .workspaceLayout.workspace as! Toolbox.Category
   }
 
-}
 
-extension ToolboxCategoryListViewController: UICollectionViewDelegateFlowLayout {
   // MARK: - UICollectionViewDelegateFlowLayout implementation
 
   public func collectionView(_ collectionView: UICollectionView,
