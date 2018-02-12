@@ -21,7 +21,7 @@ import Foundation
  Coordinates the logic of all procedure blocks inside a `WorkbenchViewController`.
  */
 @objc(BKYProcedureCoordinator)
-@objcMembers public class ProcedureCoordinator: NSObject {
+@objcMembers public class ProcedureCoordinator: NSObject, WorkspaceListener, EventManagerListener, NameManagerListener {
 
   // MARK: - Properties
 
@@ -412,9 +412,7 @@ import Foundation
 
     return nil
   }
-}
 
-extension ProcedureCoordinator: WorkspaceListener {
   // MARK: - WorkspaceListener Implementation
 
   public func workspace(_ workspace: Workspace, willAddBlockTrees blockTrees: [Block]) {
@@ -474,9 +472,6 @@ extension ProcedureCoordinator: WorkspaceListener {
       }
     }
   }
-}
-
-extension ProcedureCoordinator: EventManagerListener {
 
   public func eventManager(_ eventManager: EventManager, didFireEvent event: BlocklyEvent) {
     // Try to handle the event. The first method that returns `true` means it's been handled and
@@ -573,9 +568,7 @@ extension ProcedureCoordinator: EventManagerListener {
       }
     }
   }
-}
 
-extension ProcedureCoordinator: NameManagerListener {
   // MARK: - NameManagerListener Implementation
 
   public func nameManager(_ nameManager: NameManager, shouldRemoveName name: String) -> Bool {
