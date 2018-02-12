@@ -19,7 +19,7 @@ import Foundation
  A view for displaying the blocks inside of a `Toolbox.Category`.
  */
 @objc(BKYToolboxCategoryViewController)
-@objcMembers public final class ToolboxCategoryViewController: UIViewController {
+@objcMembers public final class ToolboxCategoryViewController: UIViewController, NameManagerListener {
   // MARK: - Properties
 
   /// The toolbox layout to display
@@ -384,9 +384,7 @@ import Foundation
 
     updateSize()
   }
-}
 
-extension ToolboxCategoryViewController: NameManagerListener {
   public func nameManager(_ nameManager: NameManager, didAddName name: String) {
     addBlocks(forVariable: name)
   }
