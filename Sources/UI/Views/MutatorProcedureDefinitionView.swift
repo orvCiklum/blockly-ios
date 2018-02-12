@@ -21,7 +21,7 @@ import Foundation
  View for rendering a `MutatorProcedureDefinition`.
  */
 @objc(MutatorProcedureDefinitionView)
-@objcMembers open class MutatorProcedureDefinitionView: LayoutView {
+@objcMembers open class MutatorProcedureDefinitionView: LayoutView, UIPopoverPresentationControllerDelegate {
   // MARK: - Properties
 
   /// Convenience property accessing `self.layout` as `MutatorProcedureDefinitionLayout`
@@ -113,11 +113,9 @@ import Foundation
                                 fromView: popoverButton,
                                 presentationDelegate: self)
   }
-}
 
 // MARK: - UIPopoverPresentationControllerDelegate
 
-extension MutatorProcedureDefinitionView: UIPopoverPresentationControllerDelegate {
   public func prepareForPopoverPresentation(
     _ popoverPresentationController: UIPopoverPresentationController) {
     guard let rtl = self.mutatorProcedureDefinitionLayout?.engine.rtl else { return }
