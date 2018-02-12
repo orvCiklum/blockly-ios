@@ -14,7 +14,7 @@
 */
 
 @testable import Blockly
-import AEXML
+
 import XCTest
 
 class BlockFactoryTest: XCTestCase {

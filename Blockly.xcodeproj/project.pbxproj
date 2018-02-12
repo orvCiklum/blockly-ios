@@ -19,6 +19,12 @@
 		3064BAD61DAFFC58006425A2 /* BKYWorkspaceUnits.m in Sources */ = {isa = PBXBuildFile; fileRef = 3064BACD1DAFFC57006425A2 /* BKYWorkspaceUnits.m */; };
 		3064BAD71DAFFC58006425A2 /* BKYEdgeInsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 3064BACE1DAFFC57006425A2 /* BKYEdgeInsets.m */; };
 		30DC64DB1D875C88002D2186 /* BlocklyPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DC64DA1D875C88002D2186 /* BlocklyPanGestureRecognizer.swift */; };
+		78D5A847201B6743005D94C7 /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5A841201B6742005D94C7 /* Options.swift */; };
+		78D5A848201B6743005D94C7 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5A842201B6742005D94C7 /* Error.swift */; };
+		78D5A849201B6743005D94C7 /* AEXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D5A843201B6742005D94C7 /* AEXML.h */; };
+		78D5A84A201B6743005D94C7 /* Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5A844201B6742005D94C7 /* Element.swift */; };
+		78D5A84B201B6743005D94C7 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5A845201B6742005D94C7 /* Document.swift */; };
+		78D5A84C201B6743005D94C7 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5A846201B6742005D94C7 /* Parser.swift */; };
 		F98FF7E11BB2036A00A4F8E5 /* BlockFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98FF7E01BB2036A00A4F8E5 /* BlockFactory.swift */; };
 		F98FF7E51BB208EB00A4F8E5 /* BlockFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98FF7E41BB208EB00A4F8E5 /* BlockFactoryTest.swift */; };
 		F98FF7E71BB4911500A4F8E5 /* BlockBuilderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98FF7E61BB4911500A4F8E5 /* BlockBuilderTest.swift */; };
@@ -34,7 +40,6 @@
 		FA16317A1CE54F89008DDBC8 /* FieldVariableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1631791CE54F89008DDBC8 /* FieldVariableView.swift */; };
 		FA16C2861D407E6600BAAFA2 /* ToolboxCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA16C2851D407E6500BAAFA2 /* ToolboxCategoryViewController.swift */; };
 		FA16C2911D49A3BA00BAAFA2 /* FieldAngleLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA16C2901D49A3BA00BAAFA2 /* FieldAngleLayout.swift */; };
-		FA1ED87A1D9B3F5200A5B19A /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA1ED8791D9B3F5200A5B19A /* AEXML.framework */; };
 		FA271CEA1B8E6D430015CE38 /* LayoutConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA271CE91B8E6D430015CE38 /* LayoutConfig.swift */; };
 		FA27267A1B83C54900777B49 /* BlockLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2726751B83C54900777B49 /* BlockLayout.swift */; };
 		FA27267D1B83C54900777B49 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2726781B83C54900777B49 /* Layout.swift */; };
@@ -256,6 +261,12 @@
 		3064BACD1DAFFC57006425A2 /* BKYWorkspaceUnits.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BKYWorkspaceUnits.m; path = ObjC/BKYWorkspaceUnits.m; sourceTree = "<group>"; };
 		3064BACE1DAFFC57006425A2 /* BKYEdgeInsets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BKYEdgeInsets.m; path = ObjC/BKYEdgeInsets.m; sourceTree = "<group>"; };
 		30DC64DA1D875C88002D2186 /* BlocklyPanGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlocklyPanGestureRecognizer.swift; sourceTree = "<group>"; };
+		78D5A841201B6742005D94C7 /* Options.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
+		78D5A842201B6742005D94C7 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		78D5A843201B6742005D94C7 /* AEXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AEXML.h; sourceTree = "<group>"; };
+		78D5A844201B6742005D94C7 /* Element.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Element.swift; sourceTree = "<group>"; };
+		78D5A845201B6742005D94C7 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		78D5A846201B6742005D94C7 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		F98FF7E01BB2036A00A4F8E5 /* BlockFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockFactory.swift; sourceTree = "<group>"; };
 		F98FF7E21BB2087700A4F8E5 /* block_factory_json_test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = block_factory_json_test.json; sourceTree = "<group>"; };
 		F98FF7E41BB208EB00A4F8E5 /* BlockFactoryTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockFactoryTest.swift; path = JSON/BlockFactoryTest.swift; sourceTree = "<group>"; };
@@ -272,7 +283,6 @@
 		FA1631791CE54F89008DDBC8 /* FieldVariableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldVariableView.swift; sourceTree = "<group>"; };
 		FA16C2851D407E6500BAAFA2 /* ToolboxCategoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolboxCategoryViewController.swift; sourceTree = "<group>"; };
 		FA16C2901D49A3BA00BAAFA2 /* FieldAngleLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldAngleLayout.swift; sourceTree = "<group>"; };
-		FA1ED8791D9B3F5200A5B19A /* AEXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AEXML.framework; path = Carthage/Build/iOS/AEXML.framework; sourceTree = "<group>"; };
 		FA271CE91B8E6D430015CE38 /* LayoutConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayoutConfig.swift; sourceTree = "<group>"; };
 		FA2726751B83C54900777B49 /* BlockLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockLayout.swift; sourceTree = "<group>"; };
 		FA2726781B83C54900777B49 /* Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
@@ -527,7 +537,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA1ED87A1D9B3F5200A5B19A /* AEXML.framework in Frameworks */,
 				FAFD37591C93C75A00C77049 /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -556,6 +565,19 @@
 				3064BACD1DAFFC57006425A2 /* BKYWorkspaceUnits.m */,
 			);
 			name = ObjC;
+			sourceTree = "<group>";
+		};
+		78D5A840201B6742005D94C7 /* AEXML */ = {
+			isa = PBXGroup;
+			children = (
+				78D5A841201B6742005D94C7 /* Options.swift */,
+				78D5A842201B6742005D94C7 /* Error.swift */,
+				78D5A843201B6742005D94C7 /* AEXML.h */,
+				78D5A844201B6742005D94C7 /* Element.swift */,
+				78D5A845201B6742005D94C7 /* Document.swift */,
+				78D5A846201B6742005D94C7 /* Parser.swift */,
+			);
+			path = AEXML;
 			sourceTree = "<group>";
 		};
 		FA2726741B83C54900777B49 /* Layout */ = {
@@ -813,6 +835,7 @@
 		FA548BFB1B630BAC008BC59C = {
 			isa = PBXGroup;
 			children = (
+				78D5A840201B6742005D94C7 /* AEXML */,
 				FA548C5E1B63144A008BC59C /* Sources */,
 				FA9B45B81C32D966001EAE68 /* Resources */,
 				FA548C591B63136F008BC59C /* Tests */,
@@ -1000,7 +1023,6 @@
 		FAE2A61D1C7551070085D36B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FA1ED8791D9B3F5200A5B19A /* AEXML.framework */,
 				FAFD37581C93C75A00C77049 /* WebKit.framework */,
 			);
 			name = Frameworks;
@@ -1037,6 +1059,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78D5A849201B6743005D94C7 /* AEXML.h in Headers */,
 				3064BAD21DAFFC58006425A2 /* BKYLayoutConfigStructs.h in Headers */,
 				3064BAD11DAFFC58006425A2 /* BKYEdgeInsets.h in Headers */,
 				3064BACF1DAFFC57006425A2 /* Blockly.h in Headers */,
@@ -1229,6 +1252,7 @@
 				FAC034EC1D51482B0017C1C8 /* FieldColorLayout.swift in Sources */,
 				FAF500501D5042F4009E4B24 /* String+Util.swift in Sources */,
 				FA2DFCB31B72D7A30072A278 /* Block+JSON.swift in Sources */,
+				78D5A848201B6743005D94C7 /* Error.swift in Sources */,
 				FA6085F71C6D469F003B6076 /* Workspace+XML.swift in Sources */,
 				FAD652781CB88FEF00F73F11 /* DefaultLayoutConfig.swift in Sources */,
 				FAA8700E1C64272C000C7C61 /* UIView+Helper.swift in Sources */,
@@ -1244,6 +1268,7 @@
 				FA6232521B6B12CF00F1EF42 /* Field.swift in Sources */,
 				FA73EFCE1E60F900001E0A24 /* BlocklyEventFactory.swift in Sources */,
 				FAFAEE6D1CDBD5AB00698179 /* InsetTextField.swift in Sources */,
+				78D5A84C201B6743005D94C7 /* Parser.swift in Sources */,
 				FAA870031C64272C000C7C61 /* BlocklyError.swift in Sources */,
 				FA9D2FBD1C111A1300D0E528 /* WorkspaceFlowLayout.swift in Sources */,
 				FA2DFCBD1B72DD140072A278 /* FieldDropdown.swift in Sources */,
@@ -1336,11 +1361,13 @@
 				FA56E3671E317C0700A53631 /* MutatorProcedureDefinitionView.swift in Sources */,
 				FA16C2861D407E6600BAAFA2 /* ToolboxCategoryViewController.swift in Sources */,
 				FAE557701BE0219C0019D0D4 /* ConnectionManager.swift in Sources */,
+				78D5A84B201B6743005D94C7 /* Document.swift in Sources */,
 				300CABE81D5E8606000E43B2 /* DefaultConnectionValidator.swift in Sources */,
 				FAC2AC1F1E4AC5D7003DB287 /* BlocklyEvent+UI.swift in Sources */,
 				FAE557761BE028840019D0D4 /* ViewManager.swift in Sources */,
 				FA9D2FBB1C11176700D0E528 /* Toolbox.swift in Sources */,
 				FA715BD91BF82F7600D83410 /* LayoutBuilder.swift in Sources */,
+				78D5A847201B6743005D94C7 /* Options.swift in Sources */,
 				FAC034FE1D5167210017C1C8 /* FieldLabelLayout.swift in Sources */,
 				FAE557791BE02B270019D0D4 /* Dragger.swift in Sources */,
 				FA6ADD891CD1C611001F1AD9 /* UIEdgeInsets+Helper.swift in Sources */,
@@ -1364,6 +1391,7 @@
 				FA8425101D3451510092CDDC /* ViewBuilder.swift in Sources */,
 				FAA870071C64272C000C7C61 /* ImageLoader.swift in Sources */,
 				FAC549601DEFBC4100484B02 /* Mutator.swift in Sources */,
+				78D5A84A201B6743005D94C7 /* Element.swift in Sources */,
 				3064BAD71DAFFC58006425A2 /* BKYEdgeInsets.m in Sources */,
 				FAABDD631CA20BA400F9E7D4 /* BlockBumper.swift in Sources */,
 				FAFD37801C9A55F800C77049 /* String+Encoding.swift in Sources */,
@@ -1613,6 +1641,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -1640,6 +1669,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -1648,6 +1678,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.google.blockly.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
