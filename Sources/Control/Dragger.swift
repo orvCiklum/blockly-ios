@@ -239,7 +239,7 @@ Controller for dragging blocks around in the workspace.
    nil, the connection manager's `mainGroup` is used.
    */
   fileprivate func clearGestureData(
-    forUUID uuid: String, moveConnectionsToGroup connectionGroup: ConnectionManager.Group? = nil)
+    forUUID uuid: String, moveConnectionsToGroup connectionGroup: Group? = nil)
   {
     guard let gestureData = _dragGestureData[uuid] else {
       return
@@ -324,7 +324,7 @@ private class DragGestureData {
   fileprivate let touchStartPosition: WorkspacePoint
 
   /// Group of connections from the connection manager at the beginning of the pan gesture.
-  fileprivate let connectionGroup: ConnectionManager.Group
+  fileprivate let connectionGroup: Group
 
   /// Event capturing the positional movement of a block during the lifespan of the drag.
   fileprivate let moveEvent: BlocklyEvent.Move
@@ -335,7 +335,7 @@ private class DragGestureData {
   // MARK: - Initializers
 
   fileprivate init(blockLayout: BlockLayout, blockLayoutStartPosition: WorkspacePoint,
-    touchStartPosition: WorkspacePoint, connectionGroup: ConnectionManager.Group,
+    touchStartPosition: WorkspacePoint, connectionGroup: Group,
     moveEvent: BlocklyEvent.Move) {
     self.blockLayout = blockLayout
     self.blockLayoutStartPosition = blockLayoutStartPosition
