@@ -56,7 +56,7 @@ import Foundation
     get { return self.workspaceViewController.delegate }
   }
   /// The scroll view from the toolbox workspace's view controller.
-  public var workspaceScrollView: WorkspaceView.ScrollView {
+  public var workspaceScrollView: ScrollView {
     return workspaceViewController.workspaceView.scrollView
   }
 

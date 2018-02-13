@@ -61,8 +61,8 @@ View for rendering a `WorkspaceLayout`.
   open fileprivate(set) var blockGroupViews = Set<BlockGroupView>()
 
   /// Scroll view used to render the workspace
-  open lazy var scrollView: WorkspaceView.ScrollView = {
-    let scrollView = WorkspaceView.ScrollView(frame: self.bounds)
+  open lazy var scrollView: ScrollView = {
+    let scrollView = ScrollView(frame: self.bounds)
     scrollView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
     scrollView.autoresizesSubviews = false
     scrollView.delegate = self
@@ -888,7 +888,6 @@ View for rendering a `WorkspaceLayout`.
 
 // MARK: - WorkspaceView.ScrollView Class
 
-extension WorkspaceView {
   /**
    The scroll view used by `WorkspaceView`.
    */
@@ -930,4 +929,4 @@ extension WorkspaceView {
       fatalError("Called unsupported initializer")
     }
   }
-}
+
