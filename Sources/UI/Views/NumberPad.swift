@@ -484,6 +484,7 @@ public protocol NumberPadDelegate: class {
 /**
  Specialized text field used for `NumberPad`.
  */
+@objc(BKYNumberPadTextField)
 public class NumberPadTextField: UITextField {
     fileprivate weak var numberPad: NumberPad? = nil
     
