@@ -161,7 +161,7 @@ import Foundation
     setFloat(0.4, for: DefaultLayoutConfig.BlockShadowSaturationMultiplier)
     setFloat(1.2, for: DefaultLayoutConfig.BlockShadowBrightnessMultiplier)
 
-    setString(Block.Style.hatNone, for: DefaultLayoutConfig.BlockHat)
+    setString(Style.hatNone, for: DefaultLayoutConfig.BlockHat)
     setSize(Size(width: 100, height: 16), for: DefaultLayoutConfig.BlockHatCapSize)
 
     setColor(ColorPalette.grey.tint100, for: DefaultLayoutConfig.MutatorSettingsButtonColor)

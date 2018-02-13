@@ -23,7 +23,7 @@ import Foundation
   // MARK: - Properties
 
   /// The information for rendering the background for this block.
-  public let background = DefaultBlockLayout.Background()
+  public let background = Background()
 
   // TODO(#34): Consider replacing all connections/relative positions with a ConnectionLayout
 
@@ -130,7 +130,7 @@ import Foundation
     self.background.removeAllRows()
 
     // Account for sizing if a cap hat needs to be rendered
-    if background.hat == Block.Style.hatCap {
+    if background.hat == Style.hatCap {
       let blockHatSize = config.workspaceSize(for: DefaultLayoutConfig.BlockHatCapSize)
       currentLineHeight += blockHatSize.height
       minimalFieldWidthRequired = max(minimalFieldWidthRequired, blockHatSize.width)

@@ -15,7 +15,6 @@
 
 import Foundation
 
-extension DefaultBlockLayout {
   /**
   Information for rendering the background of a `DefaultBlockLayout`.
   */
@@ -44,7 +43,7 @@ extension DefaultBlockLayout {
     public internal(set) var firstLineHeight: CGFloat = 0
 
     /// The hat the block should render.
-    public fileprivate(set) var hat: Block.Style.HatType = Block.Style.hatNone
+    public fileprivate(set) var hat: Style.HatType = Style.hatNone
 
     /// The position of the block's leading X edge offset, specified as a Workspace coordinate
     /// system unit, relative to its entire bounding box.
@@ -73,12 +72,12 @@ extension DefaultBlockLayout {
       if !previousStatementConnector && !outputConnector {
         self.hat = layout.block.style.hat ?? layout.config.string(for: DefaultLayoutConfig.BlockHat)
       } else {
-        self.hat = Block.Style.hatNone
+        self.hat = Style.hatNone
       }
 
       self.leadingEdgeXOffset = outputConnector ?
         layout.config.workspaceUnit(for: DefaultLayoutConfig.PuzzleTabWidth) : 0
-      self.leadingEdgeYOffset = (hat == Block.Style.hatCap) ?
+      self.leadingEdgeYOffset = (hat == Style.hatCap) ?
         layout.config.workspaceSize(for: DefaultLayoutConfig.BlockHatCapSize).height : 0
 
       if layout.block.outputConnection != nil {
@@ -272,4 +271,3 @@ extension DefaultBlockLayout {
       self.firstLineHeight = firstLineHeight
     }
   }
-}

@@ -289,7 +289,7 @@ import Foundation
     let puzzleTabHeight = layout.config.workspaceUnit(for: DefaultLayoutConfig.PuzzleTabHeight)
     let capHatSize = layout.config.workspaceSize(for: DefaultLayoutConfig.BlockHatCapSize)
     let cornerRadius = layout.config.workspaceUnit(for: DefaultLayoutConfig.BlockCornerRadius)
-    let topLeftCornerRadius = (background.hat == Block.Style.hatCap) ? 0 : cornerRadius
+    let topLeftCornerRadius = (background.hat == Style.hatCap) ? 0 : cornerRadius
 
     path.moveTo(x: xLeftEdgeOffset + topLeftCornerRadius, y: topEdgeOffset, relative: false)
 
@@ -304,7 +304,7 @@ import Foundation
           path.addLineTo(x: xLeftEdgeOffset + notchXOffset, y: topEdgeOffset, relative: false)
           PathHelper.addNotch(
             toPath: path, drawLeftToRight: true, notchWidth: notchWidth, notchHeight: notchHeight)
-        } else if background.hat == Block.Style.hatCap {
+        } else if background.hat == Style.hatCap {
           // Draw a cap on top of the block
           PathHelper.addHatCap(toPath: path, hatSize: capHatSize)
         }
