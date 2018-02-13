@@ -116,139 +116,6 @@ import Foundation
   }
 
   /**
-  Information for rendering a row inside a block.
-  */
-  @objc(BKYBlockLayoutBackgroundRow)
-  @objcMembers public final class BackgroundRow: NSObject {
-    // MARK: - Properties
-
-    /// Flag if a output connector should be rendered on the right side of the row
-    public var outputConnector: Bool = false
-
-    /// Flag if this row represents a "C" shaped statement block.
-    public var isStatement: Bool = false
-
-    /// The relative x-position of where to begin rendering the right edge of the block, expressed
-    /// as a Workspace coordinate system unit. Note, this is the left edge in RTL rendering.
-    public var rightEdge: CGFloat = 0
-
-    /// The amount of padding to include at the top of the row, expressed as a Workspace
-    /// coordinate system unit.
-    public var topPadding: CGFloat = 0
-
-    /// The amount of padding to include at the bottom of the row, expressed as a Workspace
-    /// coordinate system unit.
-    public var bottomPadding: CGFloat = 0
-
-    /// The height of the middle part of the row, expressed as a Workspace coordinate system value.
-    /// If this row has a value input at the end, the connector should be vertically aligned to
-    /// be in the center of this height.
-    public var middleHeight: CGFloat = 0
-
-    /// For statement inputs, the relative x-position of where to begin rendering the inner left
-    /// edge of the "C" shape block, expressed as a Workspace coordinate system unit.
-    public var statementIndent: CGFloat = 0
-
-    /// For statement inputs, the width of the notch of the inner ceiling of the "C" shaped block,
-    /// expressed as a Workspace coordinate system unit.
-    public var statementConnectorWidth: CGFloat = 0
-
-    /// The corresponding layouts used to render this row
-    public var layouts = [Layout]()
-
-    /// Inline connector locations
-    public var inlineConnectors = [InlineConnector]()
-
-    /// The height of this row, expressed as a Workspace coordinate system value
-    public var rowHeight: CGFloat {
-      return topPadding + middleHeight + bottomPadding
-    }
-
-    // MARK: - Internal
-
-    /**
-    Updates all render properties using the current state of `inputLayouts` and a given minimal row
-    width.
-
-    - parameter minimalRowWidth: The minimal width that this row should be. NOTE: This value is only
-    used for inline rows.
-    - parameter leadingEdgeOffset: The leading edge offset relative to the block background.
-     NOTE: This value is only used for rows containing statement/non-inline value inputs.
-    */
-    internal func updateRenderProperties(minimalRowWidth: CGFloat, leadingEdgeOffset: CGFloat) {
-      if layouts.isEmpty {
-        return
-      }
-
-      resetRenderProperties()
-
-      if let lastInputLayout = layouts.last as? DefaultInputLayout {
-        if lastInputLayout.input.type == .statement {
-          self.isStatement = true
-          self.rightEdge =
-            lastInputLayout.relativePosition.x - leadingEdgeOffset + lastInputLayout.rightEdge
-          self.topPadding = lastInputLayout.statementRowTopPadding
-          self.middleHeight = lastInputLayout.statementMiddleHeight
-          self.bottomPadding = lastInputLayout.statementRowBottomPadding
-          self.statementIndent = lastInputLayout.statementIndent
-          self.statementConnectorWidth = lastInputLayout.statementConnectorWidth
-
-          return
-        } else if let block = lastInputLayout.input.sourceBlock,
-          !block.inputsInline
-        {
-          self.rightEdge =
-            lastInputLayout.relativePosition.x - leadingEdgeOffset + lastInputLayout.rightEdge
-          self.outputConnector = (lastInputLayout.input.connection != nil)
-          self.middleHeight = layouts.map { ($0 as? InputLayout)?.firstLineHeight ?? 0 }.max()!
-          self.bottomPadding = max(layouts.map { $0.totalSize.height }.max()! - middleHeight, 0)
-
-          return
-        }
-      }
-
-      // The right edge for inline dummy/value inputs is the total width of all combined
-      var rightEdge: CGFloat = 0
-      for layout in layouts {
-        rightEdge += layout.totalSize.width
-
-        // Add inline connector locations
-        if let inputLayout = layout as? DefaultInputLayout,
-          inputLayout.input.type == .value
-        {
-          let firstLineHeight =
-            inputLayout.blockGroupLayout.blockLayouts.first?.firstLineHeight
-            ?? inputLayout.inlineConnectorSize.height
-          let inlineConnector = InlineConnector(
-            inputLayout.relativePosition + inputLayout.inlineConnectorPosition,
-            inputLayout.inlineConnectorSize,
-            firstLineHeight)
-          self.inlineConnectors.append(inlineConnector)
-        }
-      }
-      self.rightEdge = max(minimalRowWidth, rightEdge)
-      self.middleHeight = layouts.map { $0.totalSize.height }.max()!
-    }
-
-    // MARK: - Private
-
-    /**
-    Resets all render properties to their default values.
-    */
-    fileprivate func resetRenderProperties() {
-      self.outputConnector = false
-      self.isStatement = false
-      self.rightEdge = 0
-      self.topPadding = 0
-      self.bottomPadding = 0
-      self.middleHeight = 0
-      self.statementIndent = 0
-      self.statementConnectorWidth = 0
-      self.inlineConnectors = []
-    }
-  }
-
-  /**
   Information on where to render an inline connector.
   */
   public struct InlineConnector {
@@ -271,3 +138,138 @@ import Foundation
       self.firstLineHeight = firstLineHeight
     }
   }
+
+/**
+ Information for rendering a row inside a block.
+ */
+@objc(BKYBlockLayoutBackgroundRow)
+@objcMembers public final class BackgroundRow: NSObject {
+  // MARK: - Properties
+  
+  /// Flag if a output connector should be rendered on the right side of the row
+  public var outputConnector: Bool = false
+  
+  /// Flag if this row represents a "C" shaped statement block.
+  public var isStatement: Bool = false
+  
+  /// The relative x-position of where to begin rendering the right edge of the block, expressed
+  /// as a Workspace coordinate system unit. Note, this is the left edge in RTL rendering.
+  public var rightEdge: CGFloat = 0
+  
+  /// The amount of padding to include at the top of the row, expressed as a Workspace
+  /// coordinate system unit.
+  public var topPadding: CGFloat = 0
+  
+  /// The amount of padding to include at the bottom of the row, expressed as a Workspace
+  /// coordinate system unit.
+  public var bottomPadding: CGFloat = 0
+  
+  /// The height of the middle part of the row, expressed as a Workspace coordinate system value.
+  /// If this row has a value input at the end, the connector should be vertically aligned to
+  /// be in the center of this height.
+  public var middleHeight: CGFloat = 0
+  
+  /// For statement inputs, the relative x-position of where to begin rendering the inner left
+  /// edge of the "C" shape block, expressed as a Workspace coordinate system unit.
+  public var statementIndent: CGFloat = 0
+  
+  /// For statement inputs, the width of the notch of the inner ceiling of the "C" shaped block,
+  /// expressed as a Workspace coordinate system unit.
+  public var statementConnectorWidth: CGFloat = 0
+  
+  /// The corresponding layouts used to render this row
+  public var layouts = [Layout]()
+  
+  /// Inline connector locations
+  public var inlineConnectors = [InlineConnector]()
+  
+  /// The height of this row, expressed as a Workspace coordinate system value
+  public var rowHeight: CGFloat {
+    return topPadding + middleHeight + bottomPadding
+  }
+  
+  // MARK: - Internal
+  
+  /**
+   Updates all render properties using the current state of `inputLayouts` and a given minimal row
+   width.
+   
+   - parameter minimalRowWidth: The minimal width that this row should be. NOTE: This value is only
+   used for inline rows.
+   - parameter leadingEdgeOffset: The leading edge offset relative to the block background.
+   NOTE: This value is only used for rows containing statement/non-inline value inputs.
+   */
+  internal func updateRenderProperties(minimalRowWidth: CGFloat, leadingEdgeOffset: CGFloat) {
+    if layouts.isEmpty {
+      return
+    }
+    
+    resetRenderProperties()
+    
+    if let lastInputLayout = layouts.last as? DefaultInputLayout {
+      if lastInputLayout.input.type == .statement {
+        self.isStatement = true
+        self.rightEdge =
+          lastInputLayout.relativePosition.x - leadingEdgeOffset + lastInputLayout.rightEdge
+        self.topPadding = lastInputLayout.statementRowTopPadding
+        self.middleHeight = lastInputLayout.statementMiddleHeight
+        self.bottomPadding = lastInputLayout.statementRowBottomPadding
+        self.statementIndent = lastInputLayout.statementIndent
+        self.statementConnectorWidth = lastInputLayout.statementConnectorWidth
+        
+        return
+      } else if let block = lastInputLayout.input.sourceBlock,
+        !block.inputsInline
+      {
+        self.rightEdge =
+          lastInputLayout.relativePosition.x - leadingEdgeOffset + lastInputLayout.rightEdge
+        self.outputConnector = (lastInputLayout.input.connection != nil)
+        self.middleHeight = layouts.map { ($0 as? InputLayout)?.firstLineHeight ?? 0 }.max()!
+        self.bottomPadding = max(layouts.map { $0.totalSize.height }.max()! - middleHeight, 0)
+        
+        return
+      }
+    }
+    
+    // The right edge for inline dummy/value inputs is the total width of all combined
+    var rightEdge: CGFloat = 0
+    for layout in layouts {
+      rightEdge += layout.totalSize.width
+      
+      // Add inline connector locations
+      if let inputLayout = layout as? DefaultInputLayout,
+        inputLayout.input.type == .value
+      {
+        let firstLineHeight =
+          inputLayout.blockGroupLayout.blockLayouts.first?.firstLineHeight
+            ?? inputLayout.inlineConnectorSize.height
+        let inlineConnector = InlineConnector(
+          inputLayout.relativePosition + inputLayout.inlineConnectorPosition,
+          inputLayout.inlineConnectorSize,
+          firstLineHeight)
+        self.inlineConnectors.append(inlineConnector)
+      }
+    }
+    self.rightEdge = max(minimalRowWidth, rightEdge)
+    self.middleHeight = layouts.map { $0.totalSize.height }.max()!
+  }
+  
+  // MARK: - Private
+  
+  /**
+   Resets all render properties to their default values.
+   */
+  fileprivate func resetRenderProperties() {
+    self.outputConnector = false
+    self.isStatement = false
+    self.rightEdge = 0
+    self.topPadding = 0
+    self.bottomPadding = 0
+    self.middleHeight = 0
+    self.statementIndent = 0
+    self.statementConnectorWidth = 0
+    self.inlineConnectors = []
+  }
+}
+
+
