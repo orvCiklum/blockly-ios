@@ -612,51 +612,51 @@ public protocol BlockListener: class {
     mutator.block = self
     try mutator.mutateBlock()
   }
+}
 
-  // MARK: - Block.Style Class
+// MARK: - Block.Style Class
 
-  /**
-   Specifies any styles that should be applied to the block during rendering.
-   */
-  @objc(BKYBlockStyle)
-  @objcMembers open class Style: NSObject, NSCopying {
-    // MARK: - Constants
-
-    /// Underlying value of `HatType`.
-    public typealias HatType = String
-    /// Constant value for rendering a hat with a flat top.
-    public static let hatNone: HatType = "none"
-    /// Constant value for rendering a hat with a half-rounded top and horizontal base.
-    public static let hatCap: HatType = "cap"
-
-    // MARK: - Properties
-
-    /// The block that this style is attached to.
-    public weak var block: Block?
-
-    /// Specifies the type of hat to render on top of the block. This value is only applied to the
-    /// block if it has no previous or output connections.
-    public var hat: HatType? {
-      didSet {
-        if hat == oldValue {
-          return
-        }
-        block?.notifyDidUpdateBlock()
+/**
+ Specifies any styles that should be applied to the block during rendering.
+ */
+@objc(BKYBlockStyle)
+@objcMembers open class Style: NSObject, NSCopying {
+  // MARK: - Constants
+  
+  /// Underlying value of `HatType`.
+  public typealias HatType = String
+  /// Constant value for rendering a hat with a flat top.
+  public static let hatNone: HatType = "none"
+  /// Constant value for rendering a hat with a half-rounded top and horizontal base.
+  public static let hatCap: HatType = "cap"
+  
+  // MARK: - Properties
+  
+  /// The block that this style is attached to.
+  public weak var block: Block?
+  
+  /// Specifies the type of hat to render on top of the block. This value is only applied to the
+  /// block if it has no previous or output connections.
+  public var hat: HatType? {
+    didSet {
+      if hat == oldValue {
+        return
       }
+      block?.notifyDidUpdateBlock()
     }
-
-    // MARK: - Initializers
-
-    public required override init() {
-      super.init()
-    }
-
-    // MARK: - NSCopying Implementation
-
-    public func copy(with zone: NSZone? = nil) -> Any {
-      let copy = type(of: self).init()
-      copy.hat = hat
-      return copy
-    }
+  }
+  
+  // MARK: - Initializers
+  
+  public required override init() {
+    super.init()
+  }
+  
+  // MARK: - NSCopying Implementation
+  
+  public func copy(with zone: NSZone? = nil) -> Any {
+    let copy = type(of: self).init()
+    copy.hat = hat
+    return copy
   }
 }

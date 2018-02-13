@@ -57,7 +57,7 @@ import Foundation
   /// Specifies extensions that should be run on the block during initialization. Defaults to `[]`.
   public var extensions = [BlockExtension]()
   /// Specifies the style of the block.
-  public var style = Block.Style()
+  public var style = Style()
 
   // These values are publicly mutable in `Block`
 
@@ -118,7 +118,7 @@ import Foundation
     previousConnectionEnabled = block.previousConnection != nil ? true : false
     previousConnectionTypeChecks = block.previousConnection?.typeChecks
 
-    style = block.style.copy() as? Block.Style ?? Block.Style()
+    style = block.style.copy() as? Style ?? Style()
 
     inputBuilders.append(contentsOf: block.inputs.map({ InputBuilder(input: $0) }))
   }
@@ -170,7 +170,7 @@ import Foundation
       previousConnection!.typeChecks = previousConnectionTypeChecks
     }
     let inputs = inputBuilders.map({ $0.makeInput() })
-    let styleCopy = style.copy() as? Block.Style ?? Block.Style()
+    let styleCopy = style.copy() as? Style ?? Style()
     let mutatorCopy = mutator?.copyMutator()
 
     let block = try Block(
