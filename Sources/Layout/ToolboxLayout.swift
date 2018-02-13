@@ -82,7 +82,7 @@ import Foundation
 
   // MARK: - Private
 
-  private func addLayoutCoordinator(forToolboxCategory category: Toolbox.Category) {
+  private func addLayoutCoordinator(forToolboxCategory category: Category) {
     do {
       let layout =
         WorkspaceFlowLayout(workspace: category, engine: engine, layoutDirection: layoutDirection)

@@ -37,7 +37,7 @@ import Foundation
     }
   }
   /// The current category being displayed
-  public fileprivate(set) var category: Toolbox.Category?
+  public fileprivate(set) var category: Category?
   /// The view containing any UI elements for the header - currently, the "Add variable" button.
   public var headerView: UIView = {
     let view = UIView()
@@ -179,7 +179,7 @@ import Foundation
    - parameter category: The `Category` to show.
    - parameter animated: Flag indicating if resizing the view's size should be animated.
    */
-  public func showCategory(_ category: Toolbox.Category, animated: Bool) {
+  public func showCategory(_ category: Category, animated: Bool) {
     setCategory(category, animated: animated)
   }
 
@@ -201,7 +201,7 @@ import Foundation
 
   // MARK: - Private
 
-  private func setCategory(_ category: Toolbox.Category?, animated: Bool) {
+  private func setCategory(_ category: Category?, animated: Bool) {
     if self.category == category {
       return
     }

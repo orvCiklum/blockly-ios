@@ -26,7 +26,7 @@ public protocol ToolboxCategoryListViewControllerDelegate: class {
   Event that occurs when a category has been selected.
   */
   func toolboxCategoryListViewController(
-    _ controller: ToolboxCategoryListViewController, didSelectCategory category: Toolbox.Category)
+    _ controller: ToolboxCategoryListViewController, didSelectCategory category: Category)
 
   /**
   Event that occurs when the category selection has been deselected.
@@ -65,7 +65,7 @@ public protocol ToolboxCategoryListViewControllerDelegate: class {
   public var toolboxLayout: ToolboxLayout?
 
   /// The category that the user has currently selected
-  public var selectedCategory: Toolbox.Category? {
+  public var selectedCategory: Category? {
     didSet {
       if selectedCategory == oldValue {
         return
@@ -266,7 +266,7 @@ public protocol ToolboxCategoryListViewControllerDelegate: class {
 
   // MARK: - Private
 
-  fileprivate func indexPath(forCategory category: Toolbox.Category?) -> IndexPath? {
+  fileprivate func indexPath(forCategory category: Category?) -> IndexPath? {
     if toolboxLayout == nil || category == nil {
       return nil
     }
@@ -279,10 +279,10 @@ public protocol ToolboxCategoryListViewControllerDelegate: class {
     return nil
   }
 
-  fileprivate func category(forIndexPath indexPath: IndexPath) -> Toolbox.Category {
+  fileprivate func category(forIndexPath indexPath: IndexPath) -> Category {
     return toolboxLayout!
       .categoryLayoutCoordinators[(indexPath as NSIndexPath).row]
-      .workspaceLayout.workspace as! Toolbox.Category
+      .workspaceLayout.workspace as! Category
   }
 
 
@@ -322,7 +322,7 @@ public protocol ToolboxCategoryListViewControllerDelegate: class {
   static let IconSize = CGSize(width: 32, height: 32)
 
   /// The category this cell represents
-  var category: Toolbox.Category?
+  var category: Category?
 
   /// Subview holding all contents of the cell
   let rotationView = UIView()
@@ -470,7 +470,7 @@ public protocol ToolboxCategoryListViewControllerDelegate: class {
 
   // MARK: - Private
 
-  func loadCategory(_ category: Toolbox.Category,
+  func loadCategory(_ category: Category,
     orientation: ToolboxCategoryListViewController.Orientation)
   {
     self.category = category
@@ -486,7 +486,7 @@ public protocol ToolboxCategoryListViewControllerDelegate: class {
     setNeedsLayout()
   }
 
-  static func descriptionSize(forCategory category: Toolbox.Category, font: UIFont) -> CGSize {
+  static func descriptionSize(forCategory category: Category, font: UIFont) -> CGSize {
     var size: CGSize
     if category.icon != nil {
       size = IconSize

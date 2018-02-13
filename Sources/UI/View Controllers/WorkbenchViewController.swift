@@ -941,7 +941,7 @@ public protocol WorkbenchViewControllerDelegate: class {
 // MARK: - ToolboxCategoryListViewControllerDelegate implementation
 
     public func toolboxCategoryListViewController(
-        _ controller: ToolboxCategoryListViewController, didSelectCategory category: Toolbox.Category)
+        _ controller: ToolboxCategoryListViewController, didSelectCategory category: Category)
     {
         addUIStateValue(stateCategoryOpen, animated: true)
     }

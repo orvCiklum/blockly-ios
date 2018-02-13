@@ -72,7 +72,6 @@ import Foundation
 
 // MARK: - Toolbox.Category Class
 
-extension Toolbox {
   /**
    Groups a collection of blocks together, for use in a `Toolbox`.
    */
@@ -112,4 +111,4 @@ extension Toolbox {
       super.init()
     }
   }
-}
+

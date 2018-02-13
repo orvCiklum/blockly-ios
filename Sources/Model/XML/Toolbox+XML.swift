@@ -143,7 +143,7 @@ extension Toolbox {
   // MARK: - Private
 
   private class func parseChildNode(_ childNode: AEXMLElement,
-    forCategory category: Toolbox.Category, factory: BlockFactory) throws
+    forCategory category: Category, factory: BlockFactory) throws
   {
     switch childNode.name {
     case "block":
