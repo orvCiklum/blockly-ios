@@ -147,7 +147,7 @@ import Foundation
 
   public func eventManager(_ eventManager: EventManager, didFireEvent event: BlocklyEvent) {
     if layoutCoordinator?.workspaceLayout.workspace.uuid == event.workspaceID &&
-      event is BlocklyEvent.Move {
+      event is Move {
 
       EventManager.shared.groupAndFireEvents(groupID: event.groupID) {
         // Something has been moved in the workspace, which means a connection may have changed.

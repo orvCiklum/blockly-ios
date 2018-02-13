@@ -15,7 +15,6 @@
 
 import Foundation
 
-extension BlocklyEvent {
   /**
    Event fired when a block is moved on the workspace, or its parent connection is changed.
 
@@ -83,7 +82,7 @@ extension BlocklyEvent {
      `BlocklyError`: Thrown when the JSON could not be parsed into a `BlocklyEvent.Move` object.
      */
     public init(json: [String: Any]) throws {
-      if let newCoordinate = json[BlocklyEvent.Move.JSON_NEW_COORDINATE] as? String {
+      if let newCoordinate = json[Move.JSON_NEW_COORDINATE] as? String {
 
         // JSON coordinates are always integers, separated by a comma.
         let coordinates = newCoordinate.components(separatedBy: ",")
@@ -92,13 +91,13 @@ extension BlocklyEvent {
           let y = Int(coordinates[1]) else
         {
           throw BlocklyError(
-            .jsonParsing, "Invalid \"\(BlocklyEvent.Move.JSON_NEW_COORDINATE)\": \(newCoordinate)")
+            .jsonParsing, "Invalid \"\(Move.JSON_NEW_COORDINATE)\": \(newCoordinate)")
         }
 
         newPosition = WorkspacePoint(x: CGFloat(x), y: CGFloat(y))
       }
 
-      try super.init(type: BlocklyEvent.Move.EVENT_TYPE, json: json)
+      try super.init(type: Move.EVENT_TYPE, json: json)
 
       if (self.blockID?.isEmpty ?? true) {
         throw BlocklyError(.jsonParsing, "\"\(BlocklyEvent.JSON_BLOCK_ID)\" must be assigned.")
@@ -133,30 +132,30 @@ extension BlocklyEvent {
       var json = try super.toJSON()
 
       if let newParentID = self.newParentID {
-        json[BlocklyEvent.Move.JSON_NEW_PARENT_ID] = newParentID
+        json[Move.JSON_NEW_PARENT_ID] = newParentID
       }
 
       if let newInputName = self.newInputName {
-        json[BlocklyEvent.Move.JSON_NEW_INPUT_NAME] = newInputName
+        json[Move.JSON_NEW_INPUT_NAME] = newInputName
       }
 
       if let newPosition = self.newPosition {
         let x = Int(floor(newPosition.x))
         let y = Int(floor(newPosition.y))
-        json[BlocklyEvent.Move.JSON_NEW_COORDINATE] = "\(x),\(y)"
+        json[Move.JSON_NEW_COORDINATE] = "\(x),\(y)"
       }
 
       return json
     }
 
     public override func merged(withNextChronologicalEvent event: BlocklyEvent) -> BlocklyEvent? {
-      if let moveEvent = event as? BlocklyEvent.Move,
+      if let moveEvent = event as? Move,
         let blockID = self.blockID,
         workspaceID == moveEvent.workspaceID &&
         groupID == moveEvent.groupID &&
         blockID == moveEvent.blockID
       {
-        let mergedEvent = BlocklyEvent.Move(
+        let mergedEvent = Move(
           workspaceID: workspaceID, blockID: blockID, oldParentID: oldParentID,
           oldInputName: oldInputName, oldPosition: oldPosition)
         mergedEvent.groupID = groupID
@@ -212,10 +211,9 @@ extension BlocklyEvent {
      */
     static func captureMoveEvent(workspace: Workspace, block: Block, closure: () throws -> Void)
       rethrows {
-      let event = BlocklyEvent.Move(workspace: workspace, block: block)
+      let event = Move(workspace: workspace, block: block)
       try closure()
       event.recordNewValues(forBlock: block)
       EventManager.shared.addPendingEvent(event)
     }
   }
-}

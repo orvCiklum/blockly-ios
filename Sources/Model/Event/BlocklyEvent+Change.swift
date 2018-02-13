@@ -15,7 +15,6 @@
 
 import Foundation
 
-extension BlocklyEvent {
   /**
    Event fired when a property of a block changes.
    */
@@ -105,7 +104,7 @@ extension BlocklyEvent {
       self.oldValue = json[BlocklyEvent.JSON_OLD_VALUE] as? String
       self.newValue = json[BlocklyEvent.JSON_NEW_VALUE] as? String
 
-      try super.init(type: BlocklyEvent.Change.EVENT_TYPE, json: json)
+      try super.init(type: Change.EVENT_TYPE, json: json)
 
       if (self.blockID?.isEmpty ?? true) {
         throw BlocklyError(.jsonParsing, "\"\(BlocklyEvent.JSON_BLOCK_ID)\" must be assigned.")
@@ -127,7 +126,7 @@ extension BlocklyEvent {
     }
 
     public override func merged(withNextChronologicalEvent event: BlocklyEvent) -> BlocklyEvent? {
-      if let changeEvent = event as? BlocklyEvent.Change,
+      if let changeEvent = event as? Change,
         let blockID = self.blockID,
         workspaceID == changeEvent.workspaceID &&
         groupID == changeEvent.groupID &&
@@ -135,7 +134,7 @@ extension BlocklyEvent {
         element == changeEvent.element &&
         fieldName == changeEvent.fieldName
       {
-        let event = BlocklyEvent.Change(
+        let event = Change(
           element: element, workspaceID: workspaceID, blockID: blockID,
           fieldName: fieldName, oldValue: oldValue, newValue: changeEvent.newValue)
         event.groupID = groupID
@@ -161,9 +160,9 @@ extension BlocklyEvent {
      - returns: The new `BlocklyEvent.Change`.
      */
     public static func commentTextEvent(
-      workspace: Workspace, block: Block, oldValue: String, newValue: String) -> BlocklyEvent.Change
+      workspace: Workspace, block: Block, oldValue: String, newValue: String) -> Change
     {
-      return BlocklyEvent.Change(element: elementComment, workspaceID: workspace.uuid,
+      return Change(element: elementComment, workspaceID: workspace.uuid,
                                  blockID: block.uuid, oldValue: oldValue, newValue: newValue)
     }
 
@@ -175,8 +174,8 @@ extension BlocklyEvent {
      - returns: The new `BlocklyEvent.Change`.
      */
     public static func disabledStateEvent(
-      workspace: Workspace, block: Block) -> BlocklyEvent.Change {
-      return BlocklyEvent.Change(
+      workspace: Workspace, block: Block) -> Change {
+      return Change(
         element: elementDisabled, workspaceID: workspace.uuid, blockID: block.uuid,
         oldValue: !block.disabled ? "true" : "false",
         newValue: block.disabled ? "true" : "false")
@@ -194,9 +193,9 @@ extension BlocklyEvent {
      */
     public static func fieldValueEvent(
       workspace: Workspace, block: Block, field: Field, oldValue: String, newValue: String)
-      -> BlocklyEvent.Change
+      -> Change
     {
-      return BlocklyEvent.Change(
+      return Change(
         element: elementField, workspaceID: workspace.uuid, blockID: block.uuid,
         fieldName: field.name, oldValue: oldValue, newValue: newValue)
     }
@@ -208,8 +207,8 @@ extension BlocklyEvent {
      - parameter block The block where the state changed.
      - returns: The new `BlocklyEvent.Change`.
      */
-    public static func inlineStateEvent(workspace: Workspace, block: Block) -> BlocklyEvent.Change {
-      return BlocklyEvent.Change(
+    public static func inlineStateEvent(workspace: Workspace, block: Block) -> Change {
+      return Change(
         element: elementInline, workspaceID: workspace.uuid, blockID: block.uuid,
         oldValue: (!block.inputsInline ? "true" : "false"),
         newValue: (block.inputsInline ? "true" : "false"))
@@ -226,11 +225,11 @@ extension BlocklyEvent {
      */
     public static func mutateEvent(
       workspace: Workspace, block: Block, oldValue: String?, newValue: String?)
-      -> BlocklyEvent.Change
+      -> Change
     {
-      return BlocklyEvent.Change(
+      return Change(
         element: elementMutate, workspaceID: workspace.uuid, blockID: block.uuid,
         oldValue: oldValue, newValue: newValue)
     }
   }
-}
+

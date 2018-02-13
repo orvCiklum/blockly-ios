@@ -45,20 +45,20 @@ import Foundation
   private override init() {
     super.init()
 
-    registerCreator(forEventType: BlocklyEvent.Change.EVENT_TYPE) { (json) -> BlocklyEvent in
-      return try BlocklyEvent.Change(json: json)
+    registerCreator(forEventType: Change.EVENT_TYPE) { (json) -> BlocklyEvent in
+      return try Change(json: json)
     }
-    registerCreator(forEventType: BlocklyEvent.Create.EVENT_TYPE) { (json) -> BlocklyEvent in
-      return try BlocklyEvent.Create(json: json)
+    registerCreator(forEventType: Create.EVENT_TYPE) { (json) -> BlocklyEvent in
+      return try Create(json: json)
     }
-    registerCreator(forEventType: BlocklyEvent.Delete.EVENT_TYPE) { (json) -> BlocklyEvent in
-      return try BlocklyEvent.Delete(json: json)
+    registerCreator(forEventType: Delete.EVENT_TYPE) { (json) -> BlocklyEvent in
+      return try Delete(json: json)
     }
-    registerCreator(forEventType: BlocklyEvent.Move.EVENT_TYPE) { (json) -> BlocklyEvent in
-      return try BlocklyEvent.Move(json: json)
+    registerCreator(forEventType: Move.EVENT_TYPE) { (json) -> BlocklyEvent in
+      return try Move(json: json)
     }
-    registerCreator(forEventType: BlocklyEvent.UI.EVENT_TYPE) { (json) -> BlocklyEvent in
-      return try BlocklyEvent.UI(json: json)
+    registerCreator(forEventType: UI.EVENT_TYPE) { (json) -> BlocklyEvent in
+      return try UI(json: json)
     }
   }
 

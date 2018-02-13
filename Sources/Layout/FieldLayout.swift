@@ -123,7 +123,7 @@ public protocol FieldLayoutMeasurer {
                 case let aNewValue?? = newValue,
                 anOldValue != aNewValue
             {
-                let event = BlocklyEvent.Change.fieldValueEvent(
+                let event = Change.fieldValueEvent(
                     workspace: workspace, block: block, field: field,
                     oldValue: anOldValue, newValue: aNewValue)
                 EventManager.shared.addPendingEvent(event)

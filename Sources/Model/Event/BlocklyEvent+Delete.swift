@@ -15,7 +15,6 @@
 
 import Foundation
 
-extension BlocklyEvent {
   /**
    Event fired when a block is removed from the workspace.
    */
@@ -62,7 +61,7 @@ extension BlocklyEvent {
       oldXML = json[BlocklyEvent.JSON_OLD_VALUE] as? String ?? "" // Not usually used.
       blockIDs = json[BlocklyEvent.JSON_IDS] as? [String] ?? []
 
-      try super.init(type: BlocklyEvent.Delete.EVENT_TYPE, json: json)
+      try super.init(type: Delete.EVENT_TYPE, json: json)
 
       if (self.blockID?.isEmpty ?? true) {
         throw BlocklyError(.jsonParsing, "\"\(BlocklyEvent.JSON_BLOCK_ID)\" must be assigned.")
@@ -77,4 +76,3 @@ extension BlocklyEvent {
       return json
     }
   }
-}

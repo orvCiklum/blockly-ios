@@ -207,7 +207,7 @@ import Foundation
       }
 
       if let block = blockLayouts.first?.block {
-        BlocklyEvent.Move.captureMoveEvent(workspace: workspaceLayout.workspace, block: block) {
+        Move.captureMoveEvent(workspace: workspaceLayout.workspace, block: block) {
           updatePosition()
         }
       } else {

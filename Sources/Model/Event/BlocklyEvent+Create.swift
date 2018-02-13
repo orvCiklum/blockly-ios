@@ -15,7 +15,6 @@
 
 import Foundation
 
-extension BlocklyEvent {
   /**
    Event fired when a block is added to the workspace, possibly containing other child blocks
    and next blocks.
@@ -62,7 +61,7 @@ extension BlocklyEvent {
     public init(json: [String: Any]) throws {
       xml = json[BlocklyEvent.JSON_XML] as? String ?? ""
       blockIDs = json[BlocklyEvent.JSON_IDS] as? [String] ?? []
-      try super.init(type: BlocklyEvent.Create.EVENT_TYPE, json: json)
+      try super.init(type: Create.EVENT_TYPE, json: json)
 
       if (self.blockID?.isEmpty ?? true) {
         throw BlocklyError(.jsonParsing, "\"\(BlocklyEvent.JSON_BLOCK_ID)\" must be assigned.")
@@ -78,4 +77,3 @@ extension BlocklyEvent {
       return json
     }
   }
-}

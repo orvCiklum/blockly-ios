@@ -1425,13 +1425,13 @@ extension WorkbenchViewController {
    operations) or run backward (`false` for undo operations).
    */
   open func update(fromEvent event: BlocklyEvent, runForward: Bool) {
-    if let createEvent = event as? BlocklyEvent.Create {
+    if let createEvent = event as? Create {
       update(fromCreateEvent: createEvent, runForward: runForward)
-    } else if let deleteEvent = event as? BlocklyEvent.Delete {
+    } else if let deleteEvent = event as? Delete {
       update(fromDeleteEvent: deleteEvent, runForward: runForward)
-    } else if let moveEvent = event as? BlocklyEvent.Move {
+    } else if let moveEvent = event as? Move {
       update(fromMoveEvent: moveEvent, runForward: runForward)
-    } else if let changeEvent = event as? BlocklyEvent.Change {
+    } else if let changeEvent = event as? Change {
       update(fromChangeEvent: changeEvent, runForward: runForward)
     }
   }
@@ -1443,7 +1443,7 @@ extension WorkbenchViewController {
    - parameter runForward: Flag determining if the event should be run forward (`true` for redo
    operations) or run backward (`false` for undo operations).
    */
-  open func update(fromCreateEvent event: BlocklyEvent.Create, runForward: Bool) {
+  open func update(fromCreateEvent event: Create, runForward: Bool) {
     if runForward {
       do {
         let blockTree = try Block.blockTree(fromXMLString: event.xml, factory: blockFactory)
@@ -1467,7 +1467,7 @@ extension WorkbenchViewController {
    - parameter runForward: Flag determining if the event should be run forward (`true` for redo
    operations) or run backward (`false` for undo operations).
    */
-  open func update(fromDeleteEvent event: BlocklyEvent.Delete, runForward: Bool) {
+  open func update(fromDeleteEvent event: Delete, runForward: Bool) {
     if runForward {
       for blockID in event.blockIDs {
         if let block = workspace?.allBlocks[blockID] {
@@ -1500,7 +1500,7 @@ extension WorkbenchViewController {
    - parameter runForward: Flag determining if the event should be run forward (`true` for redo
    operations) or run backward (`false` for undo operations).
    */
-  open func update(fromMoveEvent event: BlocklyEvent.Move, runForward: Bool) {
+  open func update(fromMoveEvent event: Move, runForward: Bool) {
     guard let workspace = _workspaceLayoutCoordinator?.workspaceLayout.workspace,
       let blockID = event.blockID,
       let block = workspace.allBlocks[blockID] else
@@ -1580,7 +1580,7 @@ extension WorkbenchViewController {
    - parameter runForward: Flag determining if the event should be run forward (`true` for redo
    operations) or run backward (`false` for undo operations).
    */
-  open func update(fromChangeEvent event: BlocklyEvent.Change, runForward: Bool) {
+  open func update(fromChangeEvent event: Change, runForward: Bool) {
     guard let workspace = _workspaceLayoutCoordinator?.workspaceLayout.workspace,
       let blockID = event.blockID,
       let block = workspace.allBlocks[blockID] else
@@ -1593,11 +1593,11 @@ extension WorkbenchViewController {
     let boolValue = runForward ? event.newBoolValue : event.oldBoolValue
     let element = event.element
 
-    if element == BlocklyEvent.Change.elementComment {
+    if element == Change.elementComment {
       block.layout?.comment = value
-    } else if element == BlocklyEvent.Change.elementDisabled {
+    } else if element == Change.elementDisabled {
       block.layout?.disabled = boolValue
-    } else if element == BlocklyEvent.Change.elementField {
+    } else if element == Change.elementField {
       if let fieldName = event.fieldName,
         let field = block.firstField(withName: fieldName)
       {
@@ -1610,9 +1610,9 @@ extension WorkbenchViewController {
       } else {
         bky_assertionFailure("Can't set non-existent field: \(event.fieldName ?? "")")
       }
-    } else if element == BlocklyEvent.Change.elementInline {
+    } else if element == Change.elementInline {
       block.layout?.inputsInline = boolValue
-    } else if element == BlocklyEvent.Change.elementMutate {
+    } else if element == Change.elementMutate {
       do {
         // Update the mutator from xml
         let mutatorLayout = block.mutator?.layout

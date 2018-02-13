@@ -153,7 +153,7 @@ import Foundation
             block.disabled = newValue
             
             if let workspace = self.workspace {
-                let event = BlocklyEvent.Change.disabledStateEvent(workspace: workspace, block: block)
+                let event = Change.disabledStateEvent(workspace: workspace, block: block)
                 EventManager.shared.addPendingEvent(event)
             }
         }
@@ -171,7 +171,7 @@ import Foundation
             block.inputsInline = newValue
             
             if let workspace = self.workspace {
-                let event = BlocklyEvent.Change.inlineStateEvent(workspace: workspace, block: block)
+                let event = Change.inlineStateEvent(workspace: workspace, block: block)
                 EventManager.shared.addPendingEvent(event)
             }
         }
@@ -189,7 +189,7 @@ import Foundation
             block.comment = newValue
             
             if let workspace = self.workspace {
-                let event = BlocklyEvent.Change.commentTextEvent(
+                let event = Change.commentTextEvent(
                     workspace: workspace, block: block, oldValue: oldValue, newValue: newValue)
                 EventManager.shared.addPendingEvent(event)
             }

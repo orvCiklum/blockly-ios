@@ -254,7 +254,7 @@ import Foundation
     }
 
     let inferiorBlock = connection.isInferior ? sourceBlock : targetBlock
-    BlocklyEvent.Move.captureMoveEvent(workspace: workspaceLayout.workspace, block: inferiorBlock) {
+    Move.captureMoveEvent(workspace: workspaceLayout.workspace, block: inferiorBlock) {
       connection.disconnect()
 
       didChangeTarget(forConnection: connection, oldTarget: oldTarget)
@@ -309,7 +309,7 @@ import Foundation
     }
 
     let inferiorBlock = connection1.isInferior ? sourceBlock1 : sourceBlock2
-    try BlocklyEvent.Move.captureMoveEvent(
+    try Move.captureMoveEvent(
       workspace: workspaceLayout.workspace, block: inferiorBlock) {
       let oldTarget1 = connection1.targetConnection
       let oldTarget2 = connection2.targetConnection
@@ -747,7 +747,7 @@ import Foundation
     for block in blockTrees {
       do {
         // Fire creation event for the root block
-        let event = try BlocklyEvent.Create(workspace: workspaceLayout.workspace, block: block)
+        let event = try Create(workspace: workspaceLayout.workspace, block: block)
         EventManager.shared.addPendingEvent(event)
 
         // Create the layout tree for this newly added block
@@ -778,7 +778,7 @@ import Foundation
     for block in blockTrees {
       do {
         // Fire delete event for the root block
-        let event = try BlocklyEvent.Delete(workspace: workspaceLayout.workspace, block: block)
+        let event = try Delete(workspace: workspaceLayout.workspace, block: block)
         EventManager.shared.addPendingEvent(event)
       } catch let error {
         bky_assertionFailure("Could not fire delete event: \(error)")

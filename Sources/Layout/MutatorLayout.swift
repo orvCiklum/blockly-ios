@@ -93,7 +93,7 @@ import Foundation
       let newValue = mutator.toXMLElement().xml
 
       if oldValue != newValue {
-        let event = BlocklyEvent.Change.mutateEvent(
+        let event = Change.mutateEvent(
           workspace: workspace, block: block, oldValue: oldValue, newValue: newValue)
         EventManager.shared.addPendingEvent(event)
       }

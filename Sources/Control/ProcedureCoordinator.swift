@@ -476,21 +476,21 @@ import Foundation
   public func eventManager(_ eventManager: EventManager, didFireEvent event: BlocklyEvent) {
     // Try to handle the event. The first method that returns `true` means it's been handled and
     // we can skip the rest of the checks.
-    if let fieldEvent = event as? BlocklyEvent.Change,
-      fieldEvent.element == BlocklyEvent.Change.elementField {
+    if let fieldEvent = event as? Change,
+      fieldEvent.element == Change.elementField {
       processFieldChangeEvent(fieldEvent)
-    } else if let mutationEvent = event as? BlocklyEvent.Change,
-      mutationEvent.element == BlocklyEvent.Change.elementMutate {
+    } else if let mutationEvent = event as? Change,
+      mutationEvent.element == Change.elementMutate {
       processMutationChangeEvent(mutationEvent)
-    } else if let createEvent = event as? BlocklyEvent.Create {
+    } else if let createEvent = event as? Create {
       processCreateEvent(createEvent)
-    } else if let moveEvent = event as? BlocklyEvent.Move {
+    } else if let moveEvent = event as? Move {
       processMoveEvent(moveEvent)
     }
   }
 
-  private func processFieldChangeEvent(_ fieldEvent: BlocklyEvent.Change) {
-    guard fieldEvent.element == BlocklyEvent.Change.elementField,
+  private func processFieldChangeEvent(_ fieldEvent: Change) {
+    guard fieldEvent.element == Change.elementField,
       fieldEvent.fieldName == "NAME",
       fieldEvent.workspaceID == workbench?.workspace?.uuid,
       let blockID = fieldEvent.blockID,
@@ -518,8 +518,8 @@ import Foundation
     }
   }
 
-  private func processMutationChangeEvent(_ mutationEvent: BlocklyEvent.Change) {
-    guard mutationEvent.element == BlocklyEvent.Change.elementMutate,
+  private func processMutationChangeEvent(_ mutationEvent: Change) {
+    guard mutationEvent.element == Change.elementMutate,
       mutationEvent.workspaceID == workbench?.workspace?.uuid,
       let blockID = mutationEvent.blockID,
       let block = workbench?.workspace?.allBlocks[blockID],
@@ -537,7 +537,7 @@ import Foundation
     }
   }
 
-  private func processCreateEvent(_ createEvent: BlocklyEvent.Create) {
+  private func processCreateEvent(_ createEvent: Create) {
     // We only care about create events that happen in the main workspace.
     guard let workspace = workbench?.workspace,
       workspace.uuid == createEvent.workspaceID else {
@@ -554,7 +554,7 @@ import Foundation
     }
   }
 
-  private func processMoveEvent(_ moveEvent: BlocklyEvent.Move) {
+  private func processMoveEvent(_ moveEvent: Move) {
     // We only care about move events that happen in the main workspace.
     guard workbench?.workspace?.uuid == moveEvent.workspaceID else { return }
 
