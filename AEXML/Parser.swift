@@ -25,7 +25,8 @@
 import Foundation
 
 /// Simple wrapper around `Foundation.XMLParser`.
-internal class AEXMLParser: NSObject, XMLParserDelegate {
+@objc(BKYAEXMLParser)
+@objcMembers internal class AEXMLParser: NSObject, XMLParserDelegate {
     
     // MARK: - Properties
     
@@ -53,7 +54,7 @@ internal class AEXMLParser: NSObject, XMLParserDelegate {
     func parse() throws {
         let parser = XMLParser(data: data)
         parser.delegate = self
-        
+      
         parser.shouldProcessNamespaces = document.options.parserSettings.shouldProcessNamespaces
         parser.shouldReportNamespacePrefixes = document.options.parserSettings.shouldReportNamespacePrefixes
         parser.shouldResolveExternalEntities = document.options.parserSettings.shouldResolveExternalEntities
