@@ -165,7 +165,7 @@ extension Field {
         // eg. [(displayName: "Name 1", value: "Value 1"),
         //     (displayName: "Name 2", value: "Value 2")]
         options: options.map {
-          (displayName: MessageManager.shared.decodedString($0[0]), value: $0[1])
+          Option(displayName: MessageManager.shared.decodedString($0[0]), value: $0[1])
         },
         selectedIndex: 0)
     }

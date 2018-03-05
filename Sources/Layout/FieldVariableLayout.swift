@@ -24,7 +24,7 @@ import Foundation
     // MARK: - Tuples
     
     /// Represents a selectable variable, with a display name and underlying value.
-    public typealias Option = (displayName: String, value: String)
+    //public typealias Option = (displayName: String, value: String)
     
     // MARK: - Properties
     
@@ -34,7 +34,7 @@ import Foundation
     /// The list of all variable options that should be presented when rendering this layout
     open var variables: [Option] {
         let sortedVariableNames = nameManager?.names.sorted() ?? [fieldVariable.variable]
-        return sortedVariableNames.map { (displayName: $0, value: $0) }
+        return sortedVariableNames.map { Option(displayName: $0, value: $0) }
     }
     
     /// The currently selected variable

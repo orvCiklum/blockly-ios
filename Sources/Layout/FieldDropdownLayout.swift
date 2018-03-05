@@ -27,7 +27,7 @@ import Foundation
   private let fieldDropdown: FieldDropdown
 
   /// The list of options that should be presented when rendering this layout
-  open var options: [FieldDropdown.Option] {
+  open var options: [Option] {
     return fieldDropdown.options
   }
 
@@ -37,7 +37,7 @@ import Foundation
   }
 
   /// The option tuple of the currently selected index
-  open var selectedOption: FieldDropdown.Option? {
+  open var selectedOption: Option? {
     return fieldDropdown.selectedOption
   }
 

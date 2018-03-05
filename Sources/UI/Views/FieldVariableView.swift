@@ -152,8 +152,8 @@ DropdownOptionsViewControllerDelegate {
         
         // Populate options
         var options = fieldVariableLayout.variables
-        options.append((displayName: renameText, value: "rename"))
-        options.append((displayName: deleteText, value: "remove"))
+        options.append(Option(displayName: renameText, value: "rename"))
+        options.append(Option(displayName: deleteText, value: "remove"))
         viewController.options = options
         viewController.selectedIndex =
             options.index { $0.value == fieldVariableLayout.variable } ?? -1

@@ -39,7 +39,7 @@ public protocol DropdownOptionsViewControllerDelegate: class {
   // MARK: - Tuples
 
   /// Represents a dropdown option, with a display name and value
-  public typealias Option = (displayName: String, value: String)
+//  public typealias Option = (displayName: String, value: String)
 
   // MARK: - Properties
 

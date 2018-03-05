@@ -15,6 +15,17 @@
 
 import Foundation
 
+@objc(BKYOption)
+@objcMembers public class Option: NSObject {
+  var displayName: String
+  var value: String
+  
+  init(displayName: String, value: String) {
+    self.displayName = displayName
+    self.value = value
+  }
+}
+
 /**
 An input field for selecting options from a dropdown menu.
 */
@@ -23,7 +34,7 @@ An input field for selecting options from a dropdown menu.
   // MARK: - Tuples
 
   /// Defines an option for the dropdown, with a display name and underlying value.
-  public typealias Option = (displayName: String, value: String)
+  //public typealias Option = (displayName: String, value: String)
 
   // MARK: - Properties
 
@@ -57,7 +68,7 @@ An input field for selecting options from a dropdown menu.
    - parameter options: An array of tuples, containing `dislpayName` and `value` pairs.
    - parameter selectedIndex: The currently selected index for the dropdown.
    */
-  public init(name: String, options: [(displayName: String, value: String)], selectedIndex: Int) {
+  public init(name: String, options: [Option], selectedIndex: Int) {
     self.options = options
     self.selectedIndex = selectedIndex
 
@@ -82,7 +93,7 @@ An input field for selecting options from a dropdown menu.
       }
       let options = Array(
         zip(displayNames, values) // Creates tuples of (displayNames[i], values[i])
-        .map { (displayName: $0.0, value: $0.1) }) // Re-map each tuple as (displayName:, value:)
+        .map { Option(displayName: $0.0, value: $0.1) }) // Re-map each tuple as (displayName:, value:)
       self.init(name: name, options: options, selectedIndex: selectedIndex)
   }
 
