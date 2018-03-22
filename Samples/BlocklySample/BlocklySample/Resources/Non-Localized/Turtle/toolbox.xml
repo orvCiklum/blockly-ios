@@ -40,7 +40,7 @@
             </value>
         </block>
     </category>
-    <category name="Colour" colour="%{BKY_COLOUR_HUE}">
+    <category name="Colour" colour="#ff0000">
         <block type="turtle_colour">
             <value name="COLOUR">
                 <shadow type="colour_picker">
@@ -51,14 +51,14 @@
         <block type="colour_picker"></block>
         <block type="colour_random"></block>
     </category>
-    <category name="Logic" colour="%{BKY_LOGIC_HUE}">
+    <category name="Logic" colour="#ff0000">
         <block type="controls_if"></block>
         <block type="logic_compare"></block>
         <block type="logic_operation"></block>
         <block type="logic_negate"></block>
         <block type="logic_boolean"></block>
     </category>
-    <category name="Loops" colour="%{BKY_LOOPS_HUE}">
+    <category name="Loops" colour="#ff0000">
         <block type="controls_repeat_ext">
             <value name="TIMES">
                 <shadow type="math_number">
@@ -84,7 +84,7 @@
             </value>
         </block>
     </category>
-    <category name="Math" colour="%{BKY_MATH_HUE}">
+    <category name="Math" colour="#ff0000">
         <block type="math_number"></block>
         <block type="math_arithmetic">
             <value name="A">
@@ -163,6 +163,6 @@
         </block>
         <block type="math_random_float"></block>
     </category>
-    <category name="Variables" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE" />
-    <category name="Functions" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE" />
+    <category name="Variables" colour="#ff0000" custom="VARIABLE" />
+    <category name="Functions" colour="#ff0000" custom="PROCEDURE" />
 </xml>

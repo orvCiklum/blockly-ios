@@ -16,9 +16,9 @@
 import Foundation
 
 @objc(BKYOption)
-@objcMembers public class Option: NSObject {
-  var displayName: String
-  var value: String
+@objcMembers public final class Option: NSObject {
+  public var displayName: String
+  public var value: String
   
   init(displayName: String, value: String) {
     self.displayName = displayName

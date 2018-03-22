@@ -63,12 +63,12 @@ class TurtleSwiftViewController: UIViewController, TurtleViewControllerInterface
     // Create builder for creating code generator service requests
     let builder = CodeGeneratorServiceRequestBuilder(
       // This is the name of the JS object that will generate JavaScript code
-      jsGeneratorObject: "Blockly.JavaScript")
+      jsGeneratorObject: "Blockly.Lua")
     builder.addJSBlockGeneratorFiles([
       // Use JavaScript code generators for the default blocks
-      "Turtle/blockly_web/javascript_compressed.js",
+      "Turtle/blockly_web/lua_compressed.js",
       // Use JavaScript code generators for our custom turtle blocks
-      "Turtle/generators.js"])
+      "Turtle/turtle_lau.js"])
     // Load the block definitions for all default blocks
     builder.addJSONBlockDefinitionFiles(fromDefaultFiles: .allDefault)
     // Load the block definitions for our custom turtle blocks
